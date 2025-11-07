@@ -1,0 +1,9 @@
+.app_body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* height: 100vw; */
+  color: #0fb34b;
+  background: #0c0c0c;
+}
