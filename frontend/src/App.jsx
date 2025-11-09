@@ -5,7 +5,7 @@ import axios from "axios"
 function App() {
   const [naman, setNaman] = useState()
   useEffect(()=>{
-      axios.get('/api/')
+      axios.get('/api/naman')
       .then((response)=>{
         setNaman(response?.data)
       }).catch((error)=>{
