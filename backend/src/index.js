@@ -14,10 +14,11 @@ connectDB()
         console.log("Error::", err);
         throw err;
       });
-      (app.listen(process.env.PORT || 8000),
-        () => {
-          console.log(`Server is running at port :: ${process.env.PORT}`);
-        });
+
+      const PORT = process.env.PORT || 8000;
+      app.listen(PORT, () => {
+        console.log(`Server is running at port :: ${process.env.PORT}`);
+      });
     } catch (err) {
       console.log("Error::", err);
       throw err;
