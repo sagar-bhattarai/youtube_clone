@@ -3,19 +3,19 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-const app = express();
+const server = express();
 
-app.use(cors({
+server.use(cors({
   origin:process.env.CORS_ORIGIN,
   credentials:true
 }))
 
 // chaiaurbackend custom api response and error handling /video 8
 // 3 major configurations
-app.use(express.json({limit:"16kb"}));
-app.use(express.urlencoded({extended:true, limit:"16kb"}));
-app.use(express.static("public"));
-app.use(cookieParser());
+server.use(express.json({limit:"16kb"}));
+server.use(express.urlencoded({extended:true, limit:"16kb"}));
+server.use(express.static("public"));
+server.use(cookieParser());
 
 
 
@@ -23,10 +23,10 @@ app.use(cookieParser());
 import userRouter from "./routes/user.route.js";
 
 // routes declaration
-app.use("/api/v1/users",userRouter);
+server.use("/api/v1/users",userRouter);
 // http://localhost:8000/api/v1/users/register
 
-export {app};
+export {server};
 
 
 
