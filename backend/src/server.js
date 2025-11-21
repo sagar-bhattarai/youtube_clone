@@ -21,10 +21,23 @@ server.use(cookieParser());
 
 // routes import
 import userRouter from "./routes/user.route.js";
+import commentRouter from "./routes/comment.route.js";
+import likeRouter from "./routes/like.route.js";
+import playlistRouter from "./routes/playlist.route.js";
+import subscriptionRouter from "./routes/subscription.route.js";
+import tweetsRouter from "./routes/tweets.route.js";
+import videoRouter from "./routes/video.route.js";
 
 // routes declaration
-server.use("/api/v1/users",userRouter);
-// http://localhost:8000/api/v1/users/register
+server.use("/api/v1/users",userRouter); // http://localhost:8000/api/v1/users/register
+server.use("/api/v1/comments",commentRouter);
+server.use("/api/v1/likes",likeRouter);
+server.use("/api/v1/playlists",playlistRouter);
+server.use("/api/v1/subscriptions",subscriptionRouter);
+server.use("/api/v1/tweets",tweetsRouter);
+server.use("/api/v1/videos",videoRouter);
+
+
 
 export {server};
 
