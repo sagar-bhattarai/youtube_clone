@@ -15,6 +15,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
   if (!req.body || Object.keys(req.body).length === 0) {
     throw new ApiError(400, "No data received");
   }
+
   const requiredFields = ["title", "description", "duration"];
   // Check missing keys OR empty values
   for (const field of requiredFields) {
@@ -25,15 +26,13 @@ const publishAVideo = asyncHandler(async (req, res) => {
     }
   }
 
-  // TODO: get video, upload to cloudinary, create video
   const { title, description, duration, isPublished } = req.body;
-
   //   if (Number(duration) !== Number) {
   //     throw new ApiError(400, "video duration must be number");
   //   }
 
   // Video
-  const videoLocalPath = req.files?.video[0].path;
+  const videoLocalPath = req.files?.video?.[0]?.path;
   if (!videoLocalPath) {
     throw new ApiError(400, "video file is required");
   }
@@ -43,7 +42,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
   }
 
   // Thumbnail
-  const thumbnailLocalPath = req.files?.thumbnail[0].path;
+  const thumbnailLocalPath = req.files?.thumbnail?.[0]?.path;
   if (!thumbnailLocalPath) {
     throw new ApiError(400, "thumbnail file is required");
   }
