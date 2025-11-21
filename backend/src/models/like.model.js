@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "monogoose";
+import mongoose, { Schema } from "mongoose";
 
 const likeSchema = new SchemaTypes(
     {

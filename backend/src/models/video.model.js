@@ -1,4 +1,4 @@
-import mongoose, {Schema} from "monogoose";
+import mongoose, {Schema} from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"; // it is a seperate package
 
 const videoSchema = new Schema(
