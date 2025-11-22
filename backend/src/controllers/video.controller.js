@@ -78,12 +78,66 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
 const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  //TODO: get video by id
+  const video = await Video.findById(videoId);
+
+  /* 
+    check if video is private or published 
+    if not publised then show only to owner
+  */
+  // const videoOwner = User.findById(video.owner);
+  // console.log("videoOwner",videoOwner);
+
+  if (!video) {
+    throw new ApiError(404, "video not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, video, "video fetched successfully"));
 });
 
+const updateThumbnail = async(thumbnailLocalPath)=>{
+     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+
+     if(!thumbnail.url){
+      throw new ApiError(400, "Error while updating thumbnail");
+     }
+
+     return thumbnail.url;
+}
+
 const updateVideo = asyncHandler(async (req, res) => {
-  const { videoId } = req.params;
-  //TODO: update video details like title, description, thumbnail
+  // const { videoId } = req.params;
+  const { videoId, title, description } = req.body;
+  const thumbnailLocalPath = req.file?.path;
+
+  if (!(title && description && thumbnailLocalPath)) {
+    throw new ApiError(400, "All files are required");
+  }
+
+  const thumbnail = await updateThumbnail(thumbnailLocalPath);
+ 
+  const updatedVideo = await Video.findByIdAndUpdate(videoId, {
+    $set: {
+      title,
+      description,
+      thumbnail
+    },
+  }); 
+
+  if (!updatedVideo) {
+    throw new ApiError(404, "could not update video");
+  }
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      updatedVideo,
+      "video updated successfully"
+    )
+  )
 });
 
 const deleteVideo = asyncHandler(async (req, res) => {

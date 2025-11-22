@@ -63,7 +63,7 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existedUser) {
-    throw new ApiError(409, "user is email or username already exists");
+    throw new ApiError(409, "user email or username already exists");
   }
 
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
@@ -360,7 +360,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     throw new ApiError(400, "userName is missing");
   }
 
-  const channel = await User.aggreate([
+  const channel = await User.aggregate([
     {
       $match: {
         userName: userName?.toLowerCase(),
@@ -413,9 +413,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     },
   ]);
 
-  console.log("channel", channel);
-
-  if (!channel?.lenght) {
+  if (!channel?.length) {
     throw new ApiError(404, "channel doesnot exists");
   }
 
