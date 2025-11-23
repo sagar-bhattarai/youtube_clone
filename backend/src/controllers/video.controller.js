@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Video } from "../models/video.model.js";
 import { User } from "../models/user.model.js";
 // import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
@@ -96,53 +97,59 @@ const getVideoById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, video, "video fetched successfully"));
 });
 
-const updateThumbnail = async(thumbnailLocalPath)=>{
-     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
-
-     if(!thumbnail.url){
-      throw new ApiError(400, "Error while updating thumbnail");
-     }
-
-     return thumbnail.url;
-}
-
 const updateVideo = asyncHandler(async (req, res) => {
   // const { videoId } = req.params;
-  const { videoId, title, description } = req.body;
+  const { videoId, title, description, isPublished } = req.body;
   const thumbnailLocalPath = req.file?.path;
 
-  if (!(title && description && thumbnailLocalPath)) {
-    throw new ApiError(400, "All files are required");
+  let thumbnail;
+  if (thumbnailLocalPath) {
+    const upload  = await uploadOnCloudinary(thumbnailLocalPath);
+    thumbnail = upload.url;
+    if (!thumbnail) {
+      throw new ApiError(400, "Error while updating thumbnail");
+    }
   }
 
-  const thumbnail = await updateThumbnail(thumbnailLocalPath);
- 
-  const updatedVideo = await Video.findByIdAndUpdate(videoId, {
-    $set: {
-      title,
-      description,
-      thumbnail
+  const updateFields = {
+    ...(title && { title }),
+    ...(description && { description }),
+    ...(thumbnail && { thumbnail }),
+    ...(isPublished && {isPublished})
+  };
+
+  const updatedVideo = await Video.findByIdAndUpdate(
+    videoId,
+    {
+      $set: {
+        ...updateFields,
+      },
     },
-  }); 
+    { new: true }
+  );
 
   if (!updatedVideo) {
-    throw new ApiError(404, "could not update video");
+    throw new ApiError(400, "could not update video");
   }
 
   return res
-  .status(200)
-  .json(
-    new ApiResponse(
-      200,
-      updatedVideo,
-      "video updated successfully"
-    )
-  )
+    .status(200)
+    .json(new ApiResponse(200, updatedVideo, "video updated successfully"));
 });
 
 const deleteVideo = asyncHandler(async (req, res) => {
-  const { videoId } = req.params;
-  //TODO: delete video
+  // const { videoId } = req.params;  // /videos/delete-video/69204622237c32d754015912
+   const { videoId } = req.query;     // /videos/delete-video?videoId=69204622237c32d754015912
+
+  console.log("videoId",videoId);
+
+  const videoDeleted = await Video.findByIdAndDelete(videoId);
+  if (!videoDeleted) {
+    throw new ApiError(400, "Video not found or already deleted");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, videoDeleted, "Video successfully deleted"));
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
