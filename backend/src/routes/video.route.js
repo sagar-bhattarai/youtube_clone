@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getVideoById, updateVideo, publishAVideo, deleteVideo, togglePublishStatus } from "../controllers/video.controller.js";
+import { getVideoById, updateVideo, publishAVideo, deleteVideo, togglePublishStatus, getAllVideos } from "../controllers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -19,6 +19,7 @@ router.route("/publish-a-video").post(
   ]),
   publishAVideo
 );
+router.route("/all-videos").get(verifyJWT,getAllVideos);
 router.route("/c/:videoId").get(verifyJWT,getVideoById);
 router.route("/edit-video-details").patch(verifyJWT, upload.single("thumbnail"), updateVideo);
 router.route("/delete-video/:videoId").delete(verifyJWT, deleteVideo);  // req.params /videos/delete-video/69204622237c32d754015912
