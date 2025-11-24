@@ -27,6 +27,6 @@ const playlistSchema = new Schema(
     }
 );
 
-playlistSchema.plugins(mongooseAggregatePaginate);
+playlistSchema.plugin(mongooseAggregatePaginate);
 
 export const Playlist = mongoose.model("Playlist",playlistSchema);
