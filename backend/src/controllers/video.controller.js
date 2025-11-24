@@ -191,8 +191,6 @@ const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params; // /videos/delete-video/69204622237c32d754015912
   //  const { videoId } = req.query;     // /videos/delete-video?videoId=69204622237c32d754015912
 
-  console.log("videoId", videoId);
-
   const videoDeleted = await Video.findByIdAndDelete(videoId);
   if (!videoDeleted) {
     throw new ApiError(400, "Video not found or already deleted");
@@ -200,6 +198,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, videoDeleted, "Video successfully deleted"));
+    
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {

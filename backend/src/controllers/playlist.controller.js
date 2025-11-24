@@ -85,23 +85,72 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, playlist, "video successfully saved"));
+    .json(new ApiResponse(200, playlist, "video saved successfully "));
 });
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   const { playlistId, videoId } = req.params;
   // TODO: remove video from playlist
+  const deletedVideo = await Playlist.findByIdAndUpdate(
+    playlistId,
+    {
+      $pull: {
+        videos: videoId,
+      },
+    },
+    { new: true }
+  );
+
+  if (!deletedVideo) {
+    throw new ApiError(400, "Error while deleting video");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, deletedVideo, "video deleted successfully"));
 });
 
 const deletePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
   // TODO: delete playlist
+
+  const playlistDeleted = await Playlist.findByIdAndDelete(playlistId);
+
+  if (!playlistDeleted) {
+    throw new ApiError(400, "playlist not found or already deleted");
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, playlistDeleted, "playlist successfully deleted")
+    );
 });
 
 const updatePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
   const { name, description } = req.body;
   //TODO: update playlist
+
+  const updateFields = {};
+  if (name) updateFields.name = name;
+  if (description) updateFields.description = description;
+  console.log("updatedfields",updateFields);
+
+  const updatedPlaylist = await Playlist.findByIdAndUpdate(
+    playlistId,
+    { $set: updateFields },
+    { new: true } 
+  );
+
+  if (!updatedPlaylist) {
+    throw new ApiError(404, "Playlist not found");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedPlaylist, "Playlist updated successfully")
+    );
 });
 
 export {
