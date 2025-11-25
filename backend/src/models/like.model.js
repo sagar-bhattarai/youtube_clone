@@ -1,21 +1,21 @@
 import mongoose, { Schema } from "mongoose";
 
-const likeSchema = new SchemaTypes(
+const likeSchema = new Schema(
     {
         video:{
-            type: Schema.Type.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Video"
         },
         comment:{
-            type: Schema.Type.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Comment"
         },        
         tweet:{
-            type: Schema.Type.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Tweet"
         },
         likedBy:{
-            type: Schema.Type.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "User"
         },
     },
