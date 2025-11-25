@@ -6,8 +6,8 @@ import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
-router.route("/create-playlist").post(verifyJWT,  upload.none(), createPlaylist); // { "name": "mern", "description": "js"}
-router.route("/get-user-playlists").get(verifyJWT, getUserPlaylists);
+router.route("/create_playlist").post(verifyJWT,  upload.none(), createPlaylist); // { "name": "mern", "description": "js"}
+router.route("/get_user_playlists").get(verifyJWT, getUserPlaylists);
 router.route("/c/:get_playlist_by_id").get(verifyJWT, getPlaylistById);
 // router.route("/add-video-to-playlist/:playlistId/video/:videoId").post(verifyJWT, addVideoToPlaylist);
 router.route("/add_to_playlist/:playlistId/video/:videoId").post(verifyJWT, addVideoToPlaylist);

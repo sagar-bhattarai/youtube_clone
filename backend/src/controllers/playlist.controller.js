@@ -131,14 +131,20 @@ const updatePlaylist = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
   //TODO: update playlist
 
-  const updateFields = {};
-  if (name) updateFields.name = name;
-  if (description) updateFields.description = description;
-  console.log("updatedfields",updateFields);
+  // const updateFields = {};
+  // if (name) updateFields.name = name;
+  // if (description) updateFields.description = description;
+  // console.log("updatedfields",updateFields);
+
+   const updateFields = {
+    ...(name && { name }),
+    ...(description && { description })
+  };
 
   const updatedPlaylist = await Playlist.findByIdAndUpdate(
     playlistId,
-    { $set: updateFields },
+    // { $set: updateFields },
+    {$set: {...updateFields}},
     { new: true } 
   );
 
