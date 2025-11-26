@@ -4,6 +4,7 @@ import { Video } from "../models/video.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { validateObjectId } from "../utils/validateObjectId.js";
 
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
@@ -16,16 +17,7 @@ const addComment = asyncHandler(async (req, res) => {
 
   const { videoId, comment } = req.body;
 
-  let validateVideoId;
-  try {
-    validateVideoId = await Video.findById(videoId);
-  } catch (error) {
-    throw new ApiError(400, error);
-  }
-
-  if (!validateVideoId) {
-    throw new ApiError(400, "invalid comment id");
-  }
+  await validateObjectId(videoId, Video, "video");
 
   const commentAdded = await Comment.create({
     content: comment,
@@ -47,16 +39,7 @@ const updateComment = asyncHandler(async (req, res) => {
 
   const { commentId, content } = req.body;
 
-  let validateCommentId;
-  try {
-    validateCommentId = await Comment.findById(commentId);
-  } catch (error) {
-    throw new ApiError(400, error);
-  }
-
-  if (!validateCommentId) {
-    throw new ApiError(400, "invalid comment id");
-  }
+  await validateObjectId(commentId, Comment, "comment");
 
   if (content === "") {
     throw new ApiError(400, "cannot update empty comment");
@@ -82,16 +65,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
   const { commentId } = req.params;
 
-  let validateCommentId;
-  try {
-    validateCommentId = await Comment.findById(commentId);
-  } catch (error) {
-    throw new ApiError(400, error);
-  }
-
-  if (!validateCommentId) {
-    throw new ApiError(400, "invalid comment id");
-  }
+  await validateObjectId(commentId, Comment, "comment");
 
   const commentDeleted = await Comment.findByIdAndDelete(commentId);
 
